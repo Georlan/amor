@@ -1,27 +1,24 @@
 document.addEventListener("DOMContentLoaded", function(){
   const pages = document.querySelectorAll(".paper");
   let currentPage = 0;
-  
+  const totalPages = pages.length;
+  const intervalTime = 5000; // tempo em milissegundos (5 segundos)
+
   // Exibe a primeira folha ao carregar
   pages[currentPage].style.display = "block";
   
-  const nextButton = document.getElementById("nextButton");
-  
-  nextButton.addEventListener("click", function(){
-    // Esconde a folha atual
+  // Função para alternar páginas
+  function nextPage() {
+    // Oculta a página atual
     pages[currentPage].style.display = "none";
     
     // Incrementa o índice
-    currentPage++;
+    currentPage = (currentPage + 1) % totalPages;
     
-    // Se chegar ao final, pode voltar ao início ou desabilitar o botão
-    if (currentPage >= pages.length) {
-      currentPage = 0; // Loop: volta para a primeira folha
-      // Ou descomente a linha abaixo para desabilitar o botão no final:
-      // nextButton.disabled = true;
-    }
-    
-    // Exibe a nova folha
+    // Exibe a nova página
     pages[currentPage].style.display = "block";
-  });
+  }
+  
+  // Chama a função nextPage a cada intervalo definido
+  setInterval(nextPage, intervalTime);
 });
