@@ -8,7 +8,7 @@ body {
   background-size: 1000px;
   background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
   background-position: center center;
-  overflow: hidden; /* Evita scroll acidental */
+  overflow: hidden; /* Para evitar scroll acidental */
 }
 
 .paper {
@@ -64,7 +64,7 @@ img {
   /* filter: hue-rotate(90deg); */
 }
 
-/* Exemplo de variação para os papéis */
+/* Variação para os papéis */
 .paper:nth-of-type(3n) {
   background-position: left top;
 }
@@ -78,28 +78,4 @@ p {
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-}
-
-/* Estilo para o papel de áudio */
-.paper.audio-controls {
-  padding: 20px;
-  background-size: auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Estilo dos botões */
-button {
-  padding: 15px 25px;
-  font-size: 16px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:hover {
-  background-color: #2980b9;
 }
