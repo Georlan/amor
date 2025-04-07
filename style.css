@@ -8,7 +8,7 @@ body {
   background-size: 1000px;
   background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
   background-position: center center;
-  overflow: hidden; /* Para evitar scroll acidental */
+  overflow: hidden;
 }
 
 .paper {
@@ -22,12 +22,11 @@ body {
   user-select: none;
 }
 
-/* Papel de coração */
 .paper.heart {
   position: relative;
   width: 200px;
   height: 200px;
-  padding: 0;
+  padding: 20px;
   border-radius: 50%;
 }
 .paper.heart::after {
@@ -44,7 +43,6 @@ body {
   opacity: 0.6;
 }
 
-/* Papel com imagem */
 .paper.image {
   padding: 10px;
 }
@@ -52,30 +50,18 @@ body {
   font-size: 30px;
 }
 
-/* Imagens */
-img {
-  max-height: 200px;
-  width: 100%;
-  user-select: none;
-}
-
-/* Papel vermelho */
-.paper.red {
-  /* filter: hue-rotate(90deg); */
-}
-
-/* Variação para os papéis */
-.paper:nth-of-type(3n) {
-  background-position: left top;
-}
-/* .paper:nth-of-type(3n) {
-  filter: hue-rotate(200deg);
-} */
-
 p {
   font-family: 'Zeyada';
   font-size: 50px;
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
+}
+
+.paper.red {
+  /* Você pode ajustar estilos adicionais para destacar este papel, se desejar */
+}
+
+.paper:nth-of-type(3n) {
+  background-position: left top;
 }
