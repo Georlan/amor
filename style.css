@@ -29,7 +29,7 @@ body {
   padding: 20px;
   transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px rgba(0, 0, 0, 0.5);
-  display: none; /* Todas as folhas iniciam ocultas */
+  display: none; /* Inicia oculto */
 }
 
 .paper p {
@@ -37,15 +37,4 @@ body {
   font-size: 24px;
   color: rgb(0, 0, 100);
   opacity: 0.85;
-}
-
-#nextButton {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
