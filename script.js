@@ -14,22 +14,26 @@ class Paper {
   currentPaperX = 0;
   currentPaperY = 0;
   rotating = false;
+  
   init(paper) {
-    document.addEventListener('mousemove', (e) => {
+    // Função para tratar tanto mouse quanto touch
+    const moveHandler = (clientX, clientY) => {
       if (!this.rotating) {
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
+        this.mouseX = clientX;
+        this.mouseY = clientY;
         this.velX = this.mouseX - this.prevMouseX;
         this.velY = this.mouseY - this.prevMouseY;
       }
-      const dirX = e.clientX - this.mouseTouchX;
-      const dirY = e.clientY - this.mouseTouchY;
+      
+      const dirX = clientX - this.mouseTouchX;
+      const dirY = clientY - this.mouseTouchY;
       const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-      const dirNormalizedX = dirX / (dirLength || 1);
-      const dirNormalizedY = dirY / (dirLength || 1);
-      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-      let degrees = 180 * angle / Math.PI;
-      degrees = (360 + Math.round(degrees)) % 360;
+      const normX = dirX / (dirLength || 1);
+      const normY = dirY / (dirLength || 1);
+      const angle = Math.atan2(normY, normX);
+      let degrees = Math.round((angle * 180) / Math.PI);
+      degrees = (360 + degrees) % 360;
+      
       if (this.rotating) {
         this.rotation = degrees;
       }
@@ -38,27 +42,54 @@ class Paper {
           this.currentPaperX += this.velX;
           this.currentPaperY += this.velY;
         }
-        this.prevMouseX = this.mouseX;
-        this.prevMouseY = this.mouseY;
+        this.prevMouseX = clientX;
+        this.prevMouseY = clientY;
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
+    };
+
+    // Eventos para mouse
+    document.addEventListener('mousemove', (e) => {
+      moveHandler(e.clientX, e.clientY);
     });
     paper.addEventListener('mousedown', (e) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
-      paper.style.zIndex = highestZ;
-      highestZ += 1;
-      if (e.button === 0) {
-        this.mouseTouchX = this.mouseX;
-        this.mouseTouchY = this.mouseY;
-        this.prevMouseX = this.mouseX;
-        this.prevMouseY = this.mouseY;
-      }
+      paper.style.zIndex = highestZ++;
+      // Inicia o toque com coordenadas do mouse
+      this.mouseTouchX = e.clientX;
+      this.mouseTouchY = e.clientY;
+      this.prevMouseX = e.clientX;
+      this.prevMouseY = e.clientY;
+      // Se clicar com o botão direito, ativa a rotação (pode ajustar conforme necessário)
       if (e.button === 2) {
         this.rotating = true;
       }
     });
     window.addEventListener('mouseup', () => {
+      this.holdingPaper = false;
+      this.rotating = false;
+    });
+    
+    // Eventos para touch
+    document.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      moveHandler(touch.clientX, touch.clientY);
+      // Impede o scroll da tela
+      e.preventDefault();
+    }, { passive: false });
+    
+    paper.addEventListener('touchstart', (e) => {
+      if (this.holdingPaper) return;
+      this.holdingPaper = true;
+      paper.style.zIndex = highestZ++;
+      const touch = e.touches[0];
+      this.mouseTouchX = touch.clientX;
+      this.mouseTouchY = touch.clientY;
+      this.prevMouseX = touch.clientX;
+      this.prevMouseY = touch.clientY;
+    });
+    window.addEventListener('touchend', () => {
       this.holdingPaper = false;
       this.rotating = false;
     });
@@ -71,22 +102,3 @@ papers.forEach(paper => {
   p.init(paper);
 });
 
-/* Controle de áudio */
-const startButton = document.getElementById('startButton');
-const playVoiceButton = document.getElementById('playVoice');
-const instrumental = document.getElementById('instrumental');
-const voice = document.getElementById('voice');
-
-startButton.addEventListener('click', () => {
-  instrumental.play().catch(error => {
-    console.log("Erro ao tocar o instrumental:", error);
-  });
-  playVoiceButton.style.display = 'block';
-  startButton.style.display = 'none';
-});
-
-playVoiceButton.addEventListener('click', () => {
-  voice.play().catch(error => {
-    console.log("Erro ao tocar a voz:", error);
-  });
-});
