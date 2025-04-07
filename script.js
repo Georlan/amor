@@ -1,4 +1,6 @@
 let highestZ = 1;
+let voiceStarted = false;
+let instrumentalStarted = false;
 
 class Paper {
   holdingPaper = false;
@@ -16,8 +18,22 @@ class Paper {
   rotating = false;
   
   init(paper) {
-    // Função para tratar tanto mouse quanto touch
+    // Função comum para tratar movimentos de mouse e toque
     const moveHandler = (clientX, clientY) => {
+      // Se o instrumental ainda não foi iniciado, tentamos tocar (precisa de interação)
+      if (!instrumentalStarted) {
+        const instrumental = document.getElementById('instrumental');
+        instrumental.play().catch(error => console.log("Erro ao tocar instrumental:", error));
+        instrumentalStarted = true;
+      }
+      
+      // Se ainda não tocou a voz e o papel está sendo movido, inicia sua voz
+      if (!voiceStarted && this.holdingPaper) {
+        const voice = document.getElementById('voice');
+        voice.play().catch(error => console.log("Erro ao tocar a voz:", error));
+        voiceStarted = true;
+      }
+      
       if (!this.rotating) {
         this.mouseX = clientX;
         this.mouseY = clientY;
@@ -56,12 +72,10 @@ class Paper {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
       paper.style.zIndex = highestZ++;
-      // Inicia o toque com coordenadas do mouse
       this.mouseTouchX = e.clientX;
       this.mouseTouchY = e.clientY;
       this.prevMouseX = e.clientX;
       this.prevMouseY = e.clientY;
-      // Se clicar com o botão direito, ativa a rotação (pode ajustar conforme necessário)
       if (e.button === 2) {
         this.rotating = true;
       }
@@ -75,7 +89,6 @@ class Paper {
     document.addEventListener('touchmove', (e) => {
       const touch = e.touches[0];
       moveHandler(touch.clientX, touch.clientY);
-      // Impede o scroll da tela
       e.preventDefault();
     }, { passive: false });
     
@@ -96,9 +109,19 @@ class Paper {
   }
 }
 
+// Inicializa os papéis
 const papers = Array.from(document.querySelectorAll('.paper'));
 papers.forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
+// Para desktops, iniciamos o instrumental no primeiro clique em qualquer lugar da página,
+// se ele ainda não tiver sido iniciado.
+document.addEventListener('mousedown', () => {
+  if (!instrumentalStarted) {
+    const instrumental = document.getElementById('instrumental');
+    instrumental.play().catch(error => console.log("Erro ao tocar instrumental:", error));
+    instrumentalStarted = true;
+  }
+});
